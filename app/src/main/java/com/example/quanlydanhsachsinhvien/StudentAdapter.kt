@@ -8,49 +8,34 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.quanlydanhsachsinhvien.R
 
-class StudentAdapter(val students: MutableList<StudentModel>): BaseAdapter() {
-    override fun getCount() = students.size
 
-    override fun getItem(p0: Int) = students[p0]
-
-    override fun getItemId(p0: Int) = p0.toLong()
-
-    override fun getView(
-        p0: Int,
-        p1: View?,
-        p2: ViewGroup?,
-    ): View? {
-
-        val itemView: View
-        val viewHolder: ViewHolder
-
-        if (p1 == null) {
-            itemView = LayoutInflater.from(p2?.context).inflate(R.layout.layout_student_item, p2, false)
-            viewHolder = ViewHolder()
-            viewHolder.textHoten = itemView.findViewById<TextView>(R.id.text_hoten)
-            viewHolder.textMssv = itemView.findViewById<TextView>(R.id.text_mssv)
-
-            itemView.tag = viewHolder
-        } else {
-            itemView = p1
-            viewHolder = p1.tag as ViewHolder
-        }
-
-        val student = students[p0]
-        viewHolder.textHoten.text = student.hoten
-        viewHolder.textMssv.text = student.mssv
-
-        itemView.findViewById<Button>(R.id.button_remove).setOnClickListener {
-            students.removeAt(p0)
-            notifyDataSetChanged()
-        }
-
-        return itemView
+class StudentAdapter(val students: MutableList<StudentModel>) : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() {
+    class StudentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val textHoten: TextView = itemView.findViewById(R.id.text_hoten)
+        val textMssv: TextView = itemView.findViewById(R.id.text_mssv)
+        val buttonRemove: Button = itemView.findViewById(R.id.button_remove)
     }
 
-    class ViewHolder {
-        lateinit var textHoten: TextView
-        lateinit var textMssv: TextView
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.layout_student_item, parent, false)
+        return StudentViewHolder(view)
     }
+
+    override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
+        val student = students[position]
+        holder.textHoten.text = student.hoten
+        holder.textMssv.text = student.mssv
+
+        holder.buttonRemove.setOnClickListener {
+            students.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, students.size)
+        }
+    }
+
+    override fun getItemCount(): Int = students.size
 }

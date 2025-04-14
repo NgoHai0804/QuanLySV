@@ -8,6 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +35,10 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = StudentAdapter(students)
 
-        val listStudents = findViewById<ListView>(R.id.list_students)
+        val listStudents = findViewById<RecyclerView>(R.id.list_students)
+        listStudents.layoutManager = LinearLayoutManager(this)
         listStudents.adapter = adapter
+
 
 
         button_add.setOnClickListener{
@@ -49,8 +54,5 @@ class MainActivity : AppCompatActivity() {
                 input_mssv.text.clear()
             }
         }
-
-
-
     }
 }
